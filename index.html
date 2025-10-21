@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>warai-lab / my-first-code 掲示板ログ</title>
+  <title>warai-lab / my-fast-code 掲示板ログ</title>
   <style>
     :root {
       color-scheme: light dark;
@@ -187,13 +187,13 @@
 </head>
 <body>
   <header>
-    <h1>warai-lab / my-first-code 掲示板ログ</h1>
+    <h1>warai-lab / my-fast-code 掲示板ログ</h1>
     <p>GitHub Issues を掲示板のように活用しています。最新の投稿は以下をご覧ください。</p>
     <div class="cta">
-      <a href="https://github.com/warai-lab/my-first-code/issues/new" target="_blank" rel="noopener">
+      <a href="https://github.com/warai-lab/my-fast-code/issues/new" target="_blank" rel="noopener">
         💬 投稿する（GitHub Issues）
       </a>
-      <a href="https://github.com/warai-lab/my-first-code/issues" target="_blank" rel="noopener">
+      <a href="https://github.com/warai-lab/my-fast-code/issues" target="_blank" rel="noopener">
         📚 Issues 一覧を開く
       </a>
     </div>
@@ -210,7 +210,7 @@
 
   <script>
     const repoOwner = "warai-lab";
-    const repoName = "my-first-code";
+    const repoName = "my-fast-code";
     const issuesContainer = document.getElementById("issues");
     const statusEl = document.getElementById("status");
 
@@ -230,7 +230,11 @@
         renderIssues(issues.filter(issue => !issue.pull_request));
       } catch (err) {
         console.error(err);
-        statusEl.textContent = "読み込みに失敗しました。少し時間を置いて再度お試しください。";
+        if (err?.message?.includes("404")) {
+          statusEl.textContent = "リポジトリが見つかりませんでした。URL を再確認してください。";
+        } else {
+          statusEl.textContent = "読み込みに失敗しました。少し時間を置いて再度お試しください。";
+        }
       }
     };
 

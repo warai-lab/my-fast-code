@@ -1,6 +1,6 @@
 # my-fast-code
 
-GitHub Issues を掲示板として閲覧できる Web アプリです。warai-lab/my-first-code リポジトリの Issue を読み込み、モバイルでも見やすいカード形式で表示します。
+GitHub Issues を掲示板として閲覧できる Web アプリです。warai-lab/my-fast-code リポジトリの Issue を読み込み、モバイルでも見やすいカード形式で表示します。
 
 ## 使い方
 
