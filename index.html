@@ -4,26 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>warai-lab / my-fast-code 掲示板ログ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Zen+Maru+Gothic:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      color-scheme: light dark;
-      --bg: #f5f5f5;
-      --card-bg: #ffffff;
-      --text: #222222;
-      --muted: #666666;
-      --accent: #0366d6;
-      --border: #e0e0e0;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #0f1115;
-        --card-bg: #16191f;
-        --text: #f0f3f9;
-        --muted: #9aa0ae;
-        --accent: #4ea1ff;
-        --border: #30343c;
-      }
+      --bg: linear-gradient(135deg, #fff3ff, #ffe4ed 35%, #fff5d5);
+      --bg-pattern: radial-gradient(circle at 10% 20%, rgba(255, 111, 173, 0.22), transparent 45%),
+        radial-gradient(circle at 80% 12%, rgba(255, 187, 111, 0.2), transparent 50%),
+        radial-gradient(circle at 20% 80%, rgba(255, 126, 227, 0.18), transparent 55%),
+        radial-gradient(circle at 85% 75%, rgba(255, 214, 111, 0.25), transparent 40%);
+      --text-main: #412132;
+      --text-sub: #6b4b5a;
+      --card-bg: rgba(255, 255, 255, 0.8);
+      --card-outline: rgba(255, 133, 206, 0.35);
+      --shadow-soft: 0 18px 44px rgba(255, 164, 204, 0.35);
+      --shadow-hover: 0 22px 60px rgba(255, 113, 182, 0.45);
+      --hot-pink: #ff3596;
+      --font-heading: "Montserrat", "Zen Maru Gothic", system-ui, sans-serif;
+      --font-body: "Zen Maru Gothic", "Montserrat", sans-serif;
     }
 
     * {
@@ -33,32 +32,117 @@
     body {
       margin: 0;
       padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: var(--font-body);
       background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
+      color: var(--text-main);
+      line-height: 1.8;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: var(--bg-pattern);
+      z-index: -2;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(135deg, rgba(255, 123, 123, 0.12) 0%, rgba(255, 123, 123, 0) 55%),
+        repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.4) 0, rgba(255, 255, 255, 0.4) 2px, transparent 2px, transparent 16px);
+      opacity: 0.9;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .glitter {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image: radial-gradient(circle, rgba(255, 255, 255, 0.85) 0, rgba(255, 255, 255, 0.65) 35%, transparent 72%);
+      background-size: 120px 120px;
+      mix-blend-mode: screen;
+      opacity: 0.6;
+      animation: sparkle 4.2s ease-in-out infinite alternate;
+    }
+
+    @keyframes sparkle {
+      0% { transform: translate3d(-4px, 0, 0); opacity: 0.5; }
+      50% { transform: translate3d(6px, -6px, 0); opacity: 0.7; }
+      100% { transform: translate3d(2px, 4px, 0); opacity: 0.6; }
     }
 
     header {
-      padding: clamp(16px, 4vw, 32px);
+      padding: clamp(28px, 6vw, 48px);
       text-align: center;
+      position: relative;
+    }
+
+    .header-badge {
+      position: absolute;
+      top: clamp(18px, 5vw, 30px);
+      left: clamp(14px, 4vw, 30px);
+      background: linear-gradient(120deg, #ffe66d, #ffb0f5);
+      color: #40242f;
+      padding: 0.28rem 0.95rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      box-shadow: 0 10px 24px rgba(255, 118, 173, 0.32);
+      border: 1px dashed rgba(255, 255, 255, 0.6);
     }
 
     header h1 {
-      margin: 0 0 0.5rem;
-      font-size: clamp(1.5rem, 6vw, 2.2rem);
+      margin: 0;
+      font-size: clamp(2rem, 6vw, 3rem);
+      font-family: var(--font-heading);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--hot-pink);
+      text-shadow:
+        0 8px 0 rgba(255, 255, 255, 0.55),
+        0 22px 48px rgba(255, 114, 186, 0.5);
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    header h1::after {
+      content: "✧";
+      color: #ffd700;
+      font-size: clamp(1.5rem, 5vw, 2.4rem);
+      animation: twinkle 2s ease-in-out infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+      50% { transform: scale(1.25) rotate(15deg); opacity: 0.6; }
     }
 
     header p {
-      margin: 0.25rem 0;
-      color: var(--muted);
-      font-size: clamp(0.95rem, 4vw, 1.05rem);
+      margin: 0.75rem auto 0;
+      color: var(--text-sub);
+      font-size: clamp(1rem, 3.5vw, 1.2rem);
+      max-width: 560px;
+      background: rgba(255, 255, 255, 0.72);
+      padding: 1rem 1.4rem;
+      border-radius: 18px;
+      border: 2px dashed rgba(255, 159, 207, 0.6);
+      box-shadow: 0 14px 32px rgba(255, 188, 220, 0.35);
     }
 
     .cta {
       display: inline-flex;
-      gap: 0.5rem;
-      margin-top: 1rem;
+      gap: 0.75rem;
+      margin-top: 1.4rem;
       flex-wrap: wrap;
       justify-content: center;
     }
@@ -66,129 +150,247 @@
     .cta a {
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
-      padding: 0.65rem 1.2rem;
-      border-radius: 999px;
+      gap: 0.65rem;
+      padding: 0.78rem 1.6rem;
+      border-radius: 18px;
       text-decoration: none;
-      font-weight: 600;
-      color: var(--accent);
-      border: 1px solid var(--accent);
-      transition: all 0.2s ease;
-      background: transparent;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+      font-weight: 700;
+      color: #2a1020;
+      border: 2px solid transparent;
+      transition: transform 0.18s ease, box-shadow 0.24s ease;
+      box-shadow: 0 16px 32px rgba(255, 125, 196, 0.32);
+      background-image: linear-gradient(130deg, #fffcf6, #ffe3f4 55%, #fff0fb), linear-gradient(130deg, #ff9ad0, #ffd86a);
+      background-origin: border-box;
+      background-clip: padding-box, border-box;
     }
 
     .cta a:hover,
     .cta a:focus-visible {
-      background: var(--accent);
-      color: #fff;
       outline: none;
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(255, 126, 198, 0.4);
+    }
+
+    .cta a:first-child {
+      background-image: linear-gradient(130deg, #fffaf6, #ffd9fa 55%, #ffeaea), linear-gradient(130deg, #ff6fab, #ffc96f);
+    }
+
+    .cta a:last-child {
+      background-image: linear-gradient(130deg, #f7fff6, #f6f5ff 55%, #fff0ff), linear-gradient(130deg, #a7ff56, #58f3ff);
     }
 
     main {
       width: min(960px, 92vw);
-      margin: 0 auto 48px;
+      margin: 0 auto 60px;
     }
 
     #issues {
       display: grid;
-      gap: clamp(12px, 3vw, 20px);
+      gap: clamp(18px, 4vw, 28px);
       padding-bottom: 24px;
     }
 
     .issue-card {
       background: var(--card-bg);
-      border-radius: 16px;
-      padding: clamp(16px, 3vw, 24px);
-      border: 1px solid var(--border);
-      box-shadow: 0 16px 32px rgba(15, 17, 21, 0.06);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      border-radius: 26px;
+      padding: clamp(20px, 3vw, 30px);
+      border: 3px solid transparent;
+      position: relative;
+      box-shadow: var(--shadow-soft);
+      transition: transform 0.22s ease, box-shadow 0.28s ease;
+      overflow: hidden;
+      background-image:
+        linear-gradient(160deg, rgba(255, 255, 255, 0.9), rgba(255, 245, 255, 0.8)),
+        linear-gradient(160deg, rgba(255, 143, 199, 0.55), rgba(255, 244, 163, 0.55));
+      background-clip: padding-box, border-box;
+    }
+
+    .issue-card::before {
+      content: "";
+      position: absolute;
+      inset: 1rem;
+      border-radius: 18px;
+      border: 2px dashed rgba(255, 170, 225, 0.38);
+      pointer-events: none;
+    }
+
+    .issue-card::after {
+      content: attr(data-sticker);
+      position: absolute;
+      top: -10px;
+      right: 18px;
+      transform: rotate(6deg);
+      background: #fff6f7;
+      color: #ff3596;
+      font-weight: 700;
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      box-shadow: 0 12px 24px rgba(255, 98, 159, 0.35);
+      border: 1px solid rgba(255, 142, 199, 0.45);
     }
 
     .issue-card:hover,
     .issue-card:focus-within {
-      transform: translateY(-2px);
-      box-shadow: 0 18px 36px rgba(15, 17, 21, 0.12);
+      transform: translateY(-6px) rotate(-0.4deg);
+      box-shadow: var(--shadow-hover);
     }
 
     .issue-header {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 6px;
       margin-bottom: 12px;
     }
 
     .issue-title {
-      font-size: clamp(1.05rem, 4vw, 1.2rem);
-      font-weight: 600;
+      font-size: clamp(1.3rem, 4vw, 1.6rem);
+      font-weight: 700;
       margin: 0;
+      color: var(--hot-pink);
+      text-shadow: 0 12px 22px rgba(255, 140, 203, 0.4);
     }
 
     .issue-title a {
       color: inherit;
       text-decoration: none;
+      background: linear-gradient(120deg, #ff3596, #ff8bd1 45%, #ffa6eb);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: filter 0.18s ease, transform 0.18s ease;
     }
 
     .issue-title a:hover,
     .issue-title a:focus-visible {
-      text-decoration: underline;
+      text-decoration: none;
+      filter: drop-shadow(0 0 12px rgba(255, 125, 200, 0.55));
+      transform: translateY(-1px);
+      outline: none;
     }
 
     .issue-meta {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.5rem;
-      font-size: 0.9rem;
-      color: var(--muted);
+      gap: 0.6rem;
+      font-size: 0.92rem;
+      color: var(--text-sub);
+    }
+
+    .meta-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(255, 142, 199, 0.42);
+      font-weight: 600;
+      color: var(--text-main);
+      box-shadow: 0 8px 18px rgba(255, 167, 213, 0.32);
+    }
+
+    .meta-pill .icon {
+      font-size: 0.95rem;
+    }
+
+    .meta-pill .label {
+      font-size: 0.74rem;
+      color: rgba(97, 62, 72, 0.68);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
     }
 
     .issue-body {
       white-space: pre-wrap;
-      margin-top: 12px;
-      font-size: 0.95rem;
+      margin-top: 8px;
+      font-size: 1rem;
+      background: rgba(255, 255, 255, 0.72);
+      padding: 1.1rem 1.2rem;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 176, 215, 0.34);
+      box-shadow: inset 0 8px 30px rgba(255, 188, 226, 0.22);
     }
 
     .labels {
       display: inline-flex;
-      gap: 6px;
+      gap: 8px;
       flex-wrap: wrap;
-      margin-top: 8px;
+      margin-top: 12px;
     }
 
     .label {
-      border-radius: 999px;
-      padding: 0.25rem 0.6rem;
-      font-size: 0.75rem;
-      font-weight: 600;
-      background: rgba(3, 102, 214, 0.12);
-      color: var(--accent);
+      border-radius: 16px;
+      padding: 0.35rem 0.85rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.9);
+      color: var(--hot-pink);
+      border: 1px dashed rgba(255, 119, 186, 0.6);
+      box-shadow: 0 10px 26px rgba(255, 140, 210, 0.28);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
     }
 
     #status {
       text-align: center;
-      color: var(--muted);
-      margin: 24px 0;
-      font-size: 0.95rem;
+      color: var(--text-sub);
+      margin: 28px 0;
+      font-size: 1rem;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.6);
+      padding: 0.85rem 1.4rem;
+      border-radius: 18px;
+      display: inline-block;
+      box-shadow: 0 12px 36px rgba(255, 130, 195, 0.24);
     }
 
     .footer-note {
       text-align: center;
       padding: 24px clamp(16px, 5vw, 32px);
-      font-size: 0.85rem;
-      color: var(--muted);
+      font-size: 0.9rem;
+      color: var(--text-sub);
+      background: rgba(255, 255, 255, 0.64);
+      margin: 0 auto 40px;
+      width: min(720px, 90vw);
+      border-radius: 20px;
+      border: 2px dashed rgba(255, 169, 212, 0.52);
+      box-shadow: 0 12px 32px rgba(255, 163, 224, 0.26);
     }
 
     @media (max-width: 600px) {
       .issue-card {
-        border-radius: 12px;
+        border-radius: 22px;
       }
+
+      .issue-card::before {
+        inset: 0.75rem;
+      }
+
+      .meta-pill {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+
+    .issue-card:nth-of-type(3n)::after { content: "OMG"; background: #fffdf0; color: #ff8f3f; }
+    .issue-card:nth-of-type(3n + 1)::after { content: "KAWAII"; background: #f5f9ff; color: #ff4f9f; }
+    .issue-card:nth-of-type(3n + 2)::after { content: "YAY"; background: #fff1ff; color: #ff6a6a; }
+
+    .issue-card[data-state="closed"] {
+      background-image:
+        linear-gradient(160deg, rgba(255, 255, 255, 0.9), rgba(255, 245, 255, 0.8)),
+        linear-gradient(160deg, rgba(224, 224, 224, 0.55), rgba(255, 214, 214, 0.55));
     }
   </style>
 </head>
 <body>
+  <div class="glitter" aria-hidden="true"></div>
   <header>
+    <div class="header-badge">gal style board</div>
     <h1>warai-lab / my-fast-code 掲示板ログ</h1>
-    <p>GitHub Issues を掲示板のように活用しています。最新の投稿は以下をご覧ください。</p>
+    <p>GitHub Issues をギャルっぽくデコったギャル会議録として公開中♡ みんなの投稿で盛り上げてね！</p>
     <div class="cta">
       <a href="https://github.com/warai-lab/my-fast-code/issues/new" target="_blank" rel="noopener">
         💬 投稿する（GitHub Issues）
@@ -216,25 +418,45 @@
 
     const fetchIssues = async () => {
       const endpoint = `https://api.github.com/repos/${repoOwner}/${repoName}/issues?state=all&per_page=50`;
+      statusEl.textContent = "読み込み中...";
+
       try {
         const response = await fetch(endpoint, {
           headers: { "Accept": "application/vnd.github+json" },
-          cache: "no-store"
+          cache: "no-store",
+          mode: "cors"
         });
 
+        const rateRemaining = response.headers.get("X-RateLimit-Remaining");
+        const rateReset = response.headers.get("X-RateLimit-Reset");
+
         if (!response.ok) {
-          throw new Error(`GitHub API error: ${response.status}`);
+          if (response.status === 403 && rateRemaining === "0") {
+            const resetTime = rateReset ? new Date(Number(rateReset) * 1000) : null;
+            const resetMinutes = resetTime
+              ? Math.max(1, Math.round((resetTime.getTime() - Date.now()) / 60000))
+              : null;
+            statusEl.textContent = resetMinutes
+              ? `GitHub API のレート制限を超えました。約 ${resetMinutes} 分後に再読込してください。`
+              : "GitHub API のレート制限を超えました。しばらく待ってから再読込してください。";
+            return;
+          }
+
+          if (response.status === 404) {
+            statusEl.textContent = "リポジトリが見つかりませんでした。URL を再確認してください。";
+            return;
+          }
+
+          statusEl.textContent = "読み込みに失敗しました。少し時間を置いて再度お試しください。";
+          console.error(`GitHub API error: ${response.status}`, await response.text());
+          return;
         }
 
         const issues = await response.json();
         renderIssues(issues.filter(issue => !issue.pull_request));
       } catch (err) {
         console.error(err);
-        if (err?.message?.includes("404")) {
-          statusEl.textContent = "リポジトリが見つかりませんでした。URL を再確認してください。";
-        } else {
-          statusEl.textContent = "読み込みに失敗しました。少し時間を置いて再度お試しください。";
-        }
+        statusEl.textContent = "通信に失敗しました。ネットワーク設定を確認してから再度お試しください。";
       }
     };
 
@@ -269,9 +491,11 @@
 
       const fragment = document.createDocumentFragment();
 
-      issues.forEach((issue) => {
+      issues.forEach((issue, index) => {
         const card = document.createElement("article");
         card.className = "issue-card";
+        card.dataset.state = issue.state;
+        card.dataset.sticker = index % 3 === 0 ? "OMG" : index % 3 === 1 ? "KAWAII" : "YAY";
 
         const header = document.createElement("div");
         header.className = "issue-header";
@@ -289,12 +513,36 @@
         meta.className = "issue-meta";
         const author = issue.user?.login ?? "unknown";
         const stateLabel = issue.state === "open" ? "公開中" : "クローズ";
-        meta.innerHTML = `
-          <span>投稿者: @${author}</span>
-          <span>状態: ${stateLabel}</span>
-          <span>更新: ${formatRelativeTime(issue.updated_at)}</span>
-          <span>コメント: ${issue.comments}</span>
-        `;
+
+        const metaItems = [
+          { icon: "💖", label: "投稿者", value: `@${author}` },
+          { icon: issue.state === "open" ? "🌈" : "💤", label: "状態", value: stateLabel },
+          { icon: "🕒", label: "更新", value: formatRelativeTime(issue.updated_at) },
+          { icon: "💬", label: "コメント", value: `${issue.comments}` }
+        ];
+
+        metaItems.forEach((item) => {
+          const pill = document.createElement("span");
+          pill.className = "meta-pill";
+
+          const icon = document.createElement("span");
+          icon.className = "icon";
+          icon.setAttribute("aria-hidden", "true");
+          icon.textContent = item.icon;
+
+          const label = document.createElement("span");
+          label.className = "label";
+          label.textContent = item.label;
+
+          const value = document.createElement("span");
+          value.className = "value";
+          value.textContent = item.value;
+
+          pill.appendChild(icon);
+          pill.appendChild(label);
+          pill.appendChild(value);
+          meta.appendChild(pill);
+        });
 
         header.appendChild(title);
         header.appendChild(meta);
@@ -308,8 +556,8 @@
         issue.labels?.forEach((label) => {
           const badge = document.createElement("span");
           badge.className = "label";
-          badge.style.backgroundColor = `#${label.color}20`;
-          badge.style.color = `#${label.color}`;
+          badge.style.background = `linear-gradient(135deg, #${label.color}55, #${label.color}aa)`;
+          badge.style.color = "#fff";
           badge.textContent = label.name;
           labelsWrapper.appendChild(badge);
         });
