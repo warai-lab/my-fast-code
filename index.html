@@ -4,26 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>warai-lab / my-fast-code 掲示板ログ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      color-scheme: light dark;
-      --bg: #f5f5f5;
-      --card-bg: #ffffff;
-      --text: #222222;
-      --muted: #666666;
-      --accent: #0366d6;
-      --border: #e0e0e0;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #0f1115;
-        --card-bg: #16191f;
-        --text: #f0f3f9;
-        --muted: #9aa0ae;
-        --accent: #4ea1ff;
-        --border: #30343c;
-      }
+      --bg: #030617;
+      --text: #f5f8ff;
+      --muted: rgba(225, 233, 255, 0.72);
+      --glass: rgba(16, 22, 54, 0.75);
+      --card-border: rgba(120, 140, 255, 0.35);
+      --gradient-aurora: conic-gradient(from 90deg at 50% 50%, rgba(99, 212, 255, 0.12), rgba(255, 154, 245, 0.38), rgba(255, 222, 173, 0.18), rgba(132, 115, 255, 0.42), rgba(99, 212, 255, 0.12));
+      --gradient-card: linear-gradient(135deg, rgba(76, 201, 240, 0.65), rgba(151, 117, 250, 0.92));
+      --gradient-card-alt: linear-gradient(135deg, rgba(255, 207, 79, 0.65), rgba(255, 107, 154, 0.85));
+      --gradient-cta: linear-gradient(120deg, #64f0ff, #9b5fff 50%, #ff5f9d);
+      --shadow-soft: 0 18px 52px rgba(25, 28, 68, 0.55);
+      --shadow-strong: 0 32px 84px rgba(128, 98, 255, 0.55);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-pill: 999px;
     }
 
     * {
@@ -33,32 +32,121 @@
     body {
       margin: 0;
       padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: "Poppins", "Noto Sans JP", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: var(--bg);
       color: var(--text);
-      line-height: 1.6;
+      line-height: 1.7;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: -40vh 0 0;
+      z-index: -3;
+      background: radial-gradient(circle at 10% 20%, rgba(111, 72, 255, 0.55), transparent 55%),
+                  radial-gradient(circle at 85% 15%, rgba(255, 92, 135, 0.45), transparent 60%),
+                  radial-gradient(circle at 15% 90%, rgba(88, 255, 194, 0.38), transparent 55%);
+      filter: blur(45px);
+      opacity: 0.9;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background: linear-gradient(165deg, rgba(4, 7, 24, 0.95), rgba(14, 17, 42, 0.95));
+    }
+
+    .aurora {
+      position: fixed;
+      top: -25vh;
+      left: -35vw;
+      width: 170vw;
+      height: 170vh;
+      z-index: -4;
+      background: var(--gradient-aurora);
+      filter: blur(120px);
+      animation: swirl 28s linear infinite;
+      pointer-events: none;
+      opacity: 0.9;
+    }
+
+    @keyframes swirl {
+      0% {
+        transform: rotate(0deg) scale(1);
+      }
+      55% {
+        transform: rotate(150deg) scale(1.08);
+      }
+      100% {
+        transform: rotate(360deg) scale(1);
+      }
     }
 
     header {
-      padding: clamp(16px, 4vw, 32px);
-      text-align: center;
+      padding: clamp(28px, 7vw, 60px) clamp(16px, 6vw, 42px);
+      display: flex;
+      justify-content: center;
+      position: relative;
     }
 
-    header h1 {
-      margin: 0 0 0.5rem;
-      font-size: clamp(1.5rem, 6vw, 2.2rem);
+    .header-card {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: clamp(14px, 3vw, 20px);
+      background: linear-gradient(180deg, rgba(24, 32, 82, 0.95), rgba(24, 32, 82, 0.55));
+      border-radius: var(--radius-xl);
+      padding: clamp(32px, 8vw, 52px);
+      border: 1px solid rgba(126, 149, 255, 0.35);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(18px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, rgba(92, 145, 255, 0.4), rgba(255, 105, 180, 0.32), rgba(115, 255, 195, 0.28));
+      opacity: 0.75;
+      mix-blend-mode: screen;
+    }
+
+    .header-card::after {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border-radius: calc(var(--radius-xl) - 1px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      pointer-events: none;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.9rem, 6vw, 3rem);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-weight: 700;
+      text-shadow: 0 16px 44px rgba(32, 36, 86, 0.8);
     }
 
     header p {
-      margin: 0.25rem 0;
+      margin: 0;
       color: var(--muted);
-      font-size: clamp(0.95rem, 4vw, 1.05rem);
+      font-size: clamp(1rem, 3.5vw, 1.1rem);
+      max-width: 560px;
     }
 
     .cta {
       display: inline-flex;
-      gap: 0.5rem;
-      margin-top: 1rem;
+      gap: 0.75rem;
+      margin-top: clamp(10px, 4vw, 18px);
       flex-wrap: wrap;
       justify-content: center;
     }
@@ -66,136 +154,254 @@
     .cta a {
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
-      padding: 0.65rem 1.2rem;
-      border-radius: 999px;
+      gap: 0.65rem;
+      padding: 0.78rem 1.65rem;
+      border-radius: var(--radius-pill);
       text-decoration: none;
       font-weight: 600;
-      color: var(--accent);
-      border: 1px solid var(--accent);
-      transition: all 0.2s ease;
-      background: transparent;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+      color: #0b102c;
+      background: var(--gradient-cta);
+      box-shadow: 0 22px 54px rgba(101, 131, 255, 0.5);
+      transition: transform 0.18s ease, box-shadow 0.25s ease, filter 0.18s ease;
     }
 
     .cta a:hover,
     .cta a:focus-visible {
-      background: var(--accent);
-      color: #fff;
       outline: none;
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 28px 70px rgba(255, 144, 193, 0.58);
+      filter: brightness(1.05);
     }
 
     main {
-      width: min(960px, 92vw);
-      margin: 0 auto 48px;
+      width: min(1080px, 92vw);
+      margin: 0 auto 80px;
+      padding-top: clamp(12px, 4vw, 32px);
     }
 
     #issues {
       display: grid;
-      gap: clamp(12px, 3vw, 20px);
-      padding-bottom: 24px;
+      gap: clamp(18px, 4vw, 32px);
     }
 
     .issue-card {
-      background: var(--card-bg);
-      border-radius: 16px;
-      padding: clamp(16px, 3vw, 24px);
-      border: 1px solid var(--border);
-      box-shadow: 0 16px 32px rgba(15, 17, 21, 0.06);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
+      border-radius: var(--radius-lg);
+      padding: 1px;
+      background: var(--gradient-card);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+      transition: transform 0.28s ease, box-shadow 0.3s ease;
+    }
+
+    .issue-card:nth-of-type(2n) {
+      background: var(--gradient-card-alt);
     }
 
     .issue-card:hover,
     .issue-card:focus-within {
-      transform: translateY(-2px);
-      box-shadow: 0 18px 36px rgba(15, 17, 21, 0.12);
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-strong);
+    }
+
+    .issue-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.22), transparent 45%);
+      opacity: 0;
+      transition: opacity 0.28s ease;
+    }
+
+    .issue-card:hover::after,
+    .issue-card:focus-within::after {
+      opacity: 1;
+    }
+
+    .issue-card-inner {
+      position: relative;
+      border-radius: calc(var(--radius-lg) - 2px);
+      background: rgba(10, 14, 35, 0.92);
+      backdrop-filter: blur(20px);
+      padding: clamp(20px, 4vw, 32px);
+      border: 1px solid var(--card-border);
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
     .issue-header {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      margin-bottom: 12px;
+      display: grid;
+      gap: 8px;
     }
 
     .issue-title {
-      font-size: clamp(1.05rem, 4vw, 1.2rem);
-      font-weight: 600;
+      font-size: clamp(1.15rem, 4.5vw, 1.45rem);
+      font-weight: 700;
       margin: 0;
+      letter-spacing: 0.02em;
     }
 
     .issue-title a {
-      color: inherit;
+      color: #e7ebff;
       text-decoration: none;
+      text-shadow: 0 12px 32px rgba(87, 115, 255, 0.45);
+      transition: color 0.2s ease, text-shadow 0.2s ease;
     }
 
     .issue-title a:hover,
     .issue-title a:focus-visible {
       text-decoration: underline;
+      color: #ffffff;
+      text-shadow: 0 18px 42px rgba(255, 125, 208, 0.6);
+      outline: none;
     }
 
     .issue-meta {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.5rem;
+      gap: 0.6rem;
       font-size: 0.9rem;
-      color: var(--muted);
+    }
+
+    .meta-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: var(--radius-pill);
+      background: rgba(71, 88, 206, 0.24);
+      color: rgba(224, 232, 255, 0.9);
+      border: 1px solid rgba(142, 155, 255, 0.28);
+      text-shadow: 0 8px 20px rgba(25, 32, 76, 0.35);
+      transition: transform 0.18s ease;
+    }
+
+    .meta-pill.status-pill.status-open {
+      background: linear-gradient(120deg, rgba(118, 255, 202, 0.2), rgba(100, 205, 255, 0.33));
+      border-color: rgba(111, 255, 225, 0.45);
+      color: #a5ffde;
+    }
+
+    .meta-pill.status-pill.status-closed {
+      background: linear-gradient(120deg, rgba(255, 140, 158, 0.23), rgba(255, 94, 143, 0.32));
+      border-color: rgba(255, 143, 185, 0.42);
+      color: #ffd6e6;
+    }
+
+    .meta-pill .dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: currentColor;
+      box-shadow: 0 0 12px currentColor;
+      opacity: 0.88;
+    }
+
+    .meta-pill .icon {
+      font-size: 0.95rem;
+    }
+
+    .meta-label {
+      opacity: 0.7;
+      font-size: 0.78rem;
+    }
+
+    .meta-value {
+      font-weight: 600;
+      letter-spacing: 0.02em;
     }
 
     .issue-body {
       white-space: pre-wrap;
-      margin-top: 12px;
-      font-size: 0.95rem;
+      font-size: 0.98rem;
+      color: rgba(231, 236, 255, 0.95);
+      line-height: 1.85;
+      margin-top: 4px;
     }
 
     .labels {
       display: inline-flex;
-      gap: 6px;
+      gap: 9px;
       flex-wrap: wrap;
-      margin-top: 8px;
+      margin-top: 12px;
     }
 
     .label {
-      border-radius: 999px;
-      padding: 0.25rem 0.6rem;
-      font-size: 0.75rem;
+      border-radius: var(--radius-pill);
+      padding: 0.35rem 1rem;
+      font-size: 0.78rem;
       font-weight: 600;
-      background: rgba(3, 102, 214, 0.12);
-      color: var(--accent);
+      color: #ffffff;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1), 0 12px 24px rgba(0, 0, 0, 0.25);
+      text-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
     }
 
     #status {
       text-align: center;
-      color: var(--muted);
-      margin: 24px 0;
-      font-size: 0.95rem;
+      color: rgba(198, 208, 255, 0.7);
+      margin: 32px 0;
+      font-size: 1.05rem;
     }
 
     .footer-note {
       text-align: center;
-      padding: 24px clamp(16px, 5vw, 32px);
-      font-size: 0.85rem;
-      color: var(--muted);
+      padding: 28px clamp(18px, 5vw, 40px) 60px;
+      font-size: 0.88rem;
+      color: rgba(198, 208, 255, 0.65);
+      letter-spacing: 0.03em;
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 680px) {
+      .header-card {
+        padding: clamp(28px, 12vw, 44px);
+      }
+
       .issue-card {
-        border-radius: 12px;
+        border-radius: 18px;
+      }
+
+      .issue-card-inner {
+        border-radius: 16px;
+      }
+
+      .meta-pill {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .cta {
+        flex-direction: column;
+      }
+
+      .cta a {
+        width: 100%;
+        justify-content: center;
       }
     }
   </style>
 </head>
 <body>
+  <div class="aurora" aria-hidden="true"></div>
   <header>
-    <h1>warai-lab / my-fast-code 掲示板ログ</h1>
-    <p>GitHub Issues を掲示板のように活用しています。最新の投稿は以下をご覧ください。</p>
-    <div class="cta">
-      <a href="https://github.com/warai-lab/my-fast-code/issues/new" target="_blank" rel="noopener">
-        💬 投稿する（GitHub Issues）
-      </a>
-      <a href="https://github.com/warai-lab/my-fast-code/issues" target="_blank" rel="noopener">
-        📚 Issues 一覧を開く
-      </a>
+    <div class="header-card">
+      <h1>warai-lab / my-fast-code 掲示板ログ</h1>
+      <p>GitHub Issues をカラフルな宇宙ステーション風 UI で表示します。最新の投稿や会話を鮮やかにチェック！</p>
+      <div class="cta">
+        <a href="https://github.com/warai-lab/my-fast-code/issues/new" target="_blank" rel="noopener">
+          🚀 投稿する（GitHub Issues）
+        </a>
+        <a href="https://github.com/warai-lab/my-fast-code/issues" target="_blank" rel="noopener">
+          ✨ Issues 一覧を開く
+        </a>
+      </div>
     </div>
   </header>
 
@@ -269,9 +475,13 @@
 
       const fragment = document.createDocumentFragment();
 
-      issues.forEach((issue) => {
+      issues.forEach((issue, index) => {
         const card = document.createElement("article");
         card.className = "issue-card";
+        card.dataset.index = index;
+
+        const inner = document.createElement("div");
+        inner.className = "issue-card-inner";
 
         const header = document.createElement("div");
         header.className = "issue-header";
@@ -289,12 +499,66 @@
         meta.className = "issue-meta";
         const author = issue.user?.login ?? "unknown";
         const stateLabel = issue.state === "open" ? "公開中" : "クローズ";
-        meta.innerHTML = `
-          <span>投稿者: @${author}</span>
-          <span>状態: ${stateLabel}</span>
-          <span>更新: ${formatRelativeTime(issue.updated_at)}</span>
-          <span>コメント: ${issue.comments}</span>
-        `;
+
+        const metaItems = [
+          {
+            text: `@${author}`,
+            label: "投稿者",
+            className: "meta-pill",
+            icon: "👤"
+          },
+          {
+            text: stateLabel,
+            label: "状態",
+            className: `meta-pill status-pill ${issue.state === "open" ? "status-open" : "status-closed"}`,
+            icon: null,
+            showDot: true
+          },
+          {
+            text: formatRelativeTime(issue.updated_at),
+            label: "更新",
+            className: "meta-pill",
+            icon: "⏱"
+          },
+          {
+            text: `${issue.comments}`,
+            label: "コメント",
+            className: "meta-pill",
+            icon: "💬"
+          }
+        ];
+
+        metaItems.forEach((item) => {
+          const pill = document.createElement("span");
+          pill.className = item.className;
+
+          if (item.icon) {
+            const icon = document.createElement("span");
+            icon.className = "icon";
+            icon.setAttribute("aria-hidden", "true");
+            icon.textContent = item.icon;
+            pill.appendChild(icon);
+          }
+
+          if (item.showDot) {
+            const dot = document.createElement("span");
+            dot.className = "dot";
+            dot.setAttribute("aria-hidden", "true");
+            pill.appendChild(dot);
+          }
+
+          const label = document.createElement("span");
+          label.className = "meta-label";
+          label.textContent = item.label;
+
+          const value = document.createElement("span");
+          value.className = "meta-value";
+          value.textContent = item.text;
+
+          pill.appendChild(label);
+          pill.appendChild(value);
+          meta.appendChild(pill);
+        });
 
         header.appendChild(title);
         header.appendChild(meta);
@@ -308,18 +572,19 @@
         issue.labels?.forEach((label) => {
           const badge = document.createElement("span");
           badge.className = "label";
-          badge.style.backgroundColor = `#${label.color}20`;
-          badge.style.color = `#${label.color}`;
+          badge.style.background = `linear-gradient(135deg, #${label.color}aa, #${label.color}dd)`;
+          badge.style.boxShadow = `0 16px 32px #${label.color}44`;
           badge.textContent = label.name;
           labelsWrapper.appendChild(badge);
         });
 
-        card.appendChild(header);
-        card.appendChild(body);
+        inner.appendChild(header);
+        inner.appendChild(body);
         if (labelsWrapper.children.length) {
-          card.appendChild(labelsWrapper);
+          inner.appendChild(labelsWrapper);
         }
 
+        card.appendChild(inner);
         fragment.appendChild(card);
       });
 
