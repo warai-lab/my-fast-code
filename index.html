@@ -422,25 +422,45 @@
 
     const fetchIssues = async () => {
       const endpoint = `https://api.github.com/repos/${repoOwner}/${repoName}/issues?state=all&per_page=50`;
+      statusEl.textContent = "読み込み中...";
+
       try {
         const response = await fetch(endpoint, {
           headers: { "Accept": "application/vnd.github+json" },
-          cache: "no-store"
+          cache: "no-store",
+          mode: "cors"
         });
 
+        const rateRemaining = response.headers.get("X-RateLimit-Remaining");
+        const rateReset = response.headers.get("X-RateLimit-Reset");
+
         if (!response.ok) {
-          throw new Error(`GitHub API error: ${response.status}`);
+          if (response.status === 403 && rateRemaining === "0") {
+            const resetTime = rateReset ? new Date(Number(rateReset) * 1000) : null;
+            const resetMinutes = resetTime
+              ? Math.max(1, Math.round((resetTime.getTime() - Date.now()) / 60000))
+              : null;
+            statusEl.textContent = resetMinutes
+              ? `GitHub API のレート制限を超えました。約 ${resetMinutes} 分後に再読込してください。`
+              : "GitHub API のレート制限を超えました。しばらく待ってから再読込してください。";
+            return;
+          }
+
+          if (response.status === 404) {
+            statusEl.textContent = "リポジトリが見つかりませんでした。URL を再確認してください。";
+            return;
+          }
+
+          statusEl.textContent = "読み込みに失敗しました。少し時間を置いて再度お試しください。";
+          console.error(`GitHub API error: ${response.status}`, await response.text());
+          return;
         }
 
         const issues = await response.json();
         renderIssues(issues.filter(issue => !issue.pull_request));
       } catch (err) {
         console.error(err);
-        if (err?.message?.includes("404")) {
-          statusEl.textContent = "リポジトリが見つかりませんでした。URL を再確認してください。";
-        } else {
-          statusEl.textContent = "読み込みに失敗しました。少し時間を置いて再度お試しください。";
-        }
+        statusEl.textContent = "通信に失敗しました。ネットワーク設定を確認してから再度お試しください。";
       }
     };
 
